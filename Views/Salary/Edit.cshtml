@@ -1,0 +1,100 @@
+﻿@model ZulfieP.Models.Entities.Salaries
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Salaries</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="EmployeeId" class="control-label"></label>
+                <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+                <span asp-validation-for="EmployeeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InitialSalary" class="control-label"></label>
+                <input asp-for="InitialSalary" class="form-control" />
+                <span asp-validation-for="InitialSalary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UniAllotments" class="control-label"></label>
+                <input asp-for="UniAllotments" class="form-control" />
+                <span asp-validation-for="UniAllotments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DegreeAllotments" class="control-label"></label>
+                <input asp-for="DegreeAllotments" class="form-control" />
+                <span asp-validation-for="DegreeAllotments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PositionAllotments" class="control-label"></label>
+                <input asp-for="PositionAllotments" class="form-control" />
+                <span asp-validation-for="PositionAllotments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarrigeAllotments" class="control-label"></label>
+                <input asp-for="MarrigeAllotments" class="form-control" />
+                <span asp-validation-for="MarrigeAllotments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KidsAllotments" class="control-label"></label>
+                <input asp-for="KidsAllotments" class="form-control" />
+                <span asp-validation-for="KidsAllotments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TransportationAllotments" class="control-label"></label>
+                <input asp-for="TransportationAllotments" class="form-control" />
+                <span asp-validation-for="TransportationAllotments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RetirementSubtraction" class="control-label"></label>
+                <input asp-for="RetirementSubtraction" class="form-control" />
+                <span asp-validation-for="RetirementSubtraction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IncomeTax" class="control-label"></label>
+                <input asp-for="IncomeTax" class="form-control" />
+                <span asp-validation-for="IncomeTax" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OtherSubtractions" class="control-label"></label>
+                <input asp-for="OtherSubtractions" class="form-control" />
+                <span asp-validation-for="OtherSubtractions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ScientificTitles.ScientificTitle" class="control-label"></label>
+                <input asp-for="ScientificTitles.ScientificTitle" class="form-control" />
+                <span asp-validation-for="ScientificTitles.ScientificTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VacationDiff" class="control-label"></label>
+                <input asp-for="VacationDiff" class="form-control" />
+                <span asp-validation-for="VacationDiff" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

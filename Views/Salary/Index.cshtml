@@ -1,0 +1,121 @@
+﻿@model IEnumerable<ZulfieP.Models.Entities.Salaries>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New Employee</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InitialSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniAllotments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DegreeAllotments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PositionAllotments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarrigeAllotments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KidsAllotments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransportationAllotments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RetirementSubtraction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IncomeTax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherSubtractions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ScientificTitles.ScientificTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VacationDiff)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialSalary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniAllotments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DegreeAllotments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PositionAllotments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarrigeAllotments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KidsAllotments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransportationAllotments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RetirementSubtraction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IncomeTax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OtherSubtractions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ScientificTitles.ScientificTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VacationDiff)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

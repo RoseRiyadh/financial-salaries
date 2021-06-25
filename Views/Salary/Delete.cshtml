@@ -1,0 +1,106 @@
+﻿@model ZulfieP.Models.Entities.Salaries
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Salaries</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.InitialSalary)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.InitialSalary)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UniAllotments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UniAllotments)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DegreeAllotments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DegreeAllotments)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PositionAllotments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PositionAllotments)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MarrigeAllotments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MarrigeAllotments)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.KidsAllotments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.KidsAllotments)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TransportationAllotments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TransportationAllotments)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RetirementSubtraction)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RetirementSubtraction)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IncomeTax)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IncomeTax)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OtherSubtractions)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OtherSubtractions)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ScientificTitles.ScientificTitle)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ScientificTitles.ScientificTitle)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VacationDiff)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VacationDiff)
+        </dd>
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Employee)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Employee.FullName)
+        </dd class>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
