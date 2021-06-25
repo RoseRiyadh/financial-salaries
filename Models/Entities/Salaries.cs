@@ -23,11 +23,11 @@ namespace ZulfieP.Models.Entities
         public int? RetirementSubtraction { get; set; }
         public int? IncomeTax { get; set; }
         public int? OtherSubtractions { get; set; }
-        public string Description { get; set; }
-        public int ScientificTitleId { get; set; }
-        public int VacationDiff { get; set; }
+        public string? Description { get; set; }
+        public int? ScientificTitleId { get; set; }
+        public int? VacationDiff { get; set; }
 
-        public int TotalAmount { get; set; }
+        public int? TotalAmount { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual Employees Employee { get; set; }

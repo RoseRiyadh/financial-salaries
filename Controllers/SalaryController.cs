@@ -19,16 +19,15 @@ namespace ZulfieP.Controllers
         }
 
         // GET: Salary
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
 
-            var salariesContext = _context.Salaries.Include(s => s.Employee).Where(s => s.IsDeleted != true && s.Employee.IsDeleted != true).OrderBy(s => s.Employee.FullName);
-            foreach(var salary in salariesContext)
+            var salariesContext = _context.Salaries.Include(s => s.Employee).Include(s => s.ScientificTitles).Where(s => s.IsDeleted != true && s.Employee.IsDeleted != true).ToList();
+            foreach (var salary in salariesContext)
             {
-
                 salary.IncomeTax = this.calculateTaxIncome(salary);
             }
-            return View(await salariesContext.ToListAsync());
+            return View(salariesContext);
         }
 
         private int calculateTaxIncome(Salaries salary)
@@ -238,9 +237,8 @@ namespace ZulfieP.Controllers
             // _context.Salaries.Remove(salaries);
             var salary = _context.Salaries.Find(id);
             salary.IsDeleted = true;
-            salary.Employee.IsDeleted = true;
             _context.Update(salary);
-            _context.Update(salary.Employee);
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

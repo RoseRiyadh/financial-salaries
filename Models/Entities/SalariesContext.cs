@@ -56,7 +56,6 @@ namespace ZulfieP.Models.Entities
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.GradeId).HasColumnName("grade_id");
 
                 entity.Property(e => e.IdentityNumber)
                     .IsRequired()
@@ -73,6 +72,8 @@ namespace ZulfieP.Models.Entities
                 entity.Property(e => e.MarrigeStatus).HasColumnName("marrige_status");
 
                 entity.Property(e => e.Section).HasColumnName("section");
+
+                entity.Property(e => e.GradeId).HasColumnName("grade_id");
 
                 entity.Property(e => e.StageId).HasColumnName("stage_id");
 
@@ -159,7 +160,7 @@ namespace ZulfieP.Models.Entities
 
                 entity.Property(e => e.RetirementSubtraction).HasColumnName("retirement_subtraction");
 
-                entity.Property(e => e.ScientificTitleId).HasColumnName("scientific_title");
+                entity.Property(e => e.ScientificTitleId).HasColumnName("scientific_title_id");
 
                 entity.Property(e => e.TransportationAllotments).HasColumnName("transportation_allotments");
 

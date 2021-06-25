@@ -71,15 +71,17 @@ namespace ZulfieP.Controllers
                     IsRatired = employees.IsRatired,
                     KidsNumber = employees.KidsNumber,
                     GradeId = employees.GradeId,
+                    StageId = employees.StageId,
                     MarrigeStatus = employees.MarrigeStatus,
                 };
-                _context.Add(emp);
+                _context.Employees.Add(emp);
 
-                var employee = _context.SaveChangesAsync();
+                var employee = _context.SaveChanges();
 
                 var sal = new Salaries()
                 {
-                    EmployeeId = employee.Id,
+                    EmployeeId = emp.Id,
+                    Employee = emp,
                     InitialSalary = employees.InitialSalary,
                     UniAllotments = employees.UniAllotments,
                     DegreeAllotments = employees.DegreeAllotments,
@@ -92,17 +94,94 @@ namespace ZulfieP.Controllers
                     OtherSubtractions = employees.OtherSubtractions,
                     Description = employees.Description,
                     ScientificTitleId = employees.ScientificTitleId,
-                    VacationDiff = employees.VacationDiff,
+                    ScientificTitles = _context.ScientificTitles.Find(employees.ScientificTitleId),
+                    VacationDiff = (int)employees.VacationDiff,
                     TotalAmount = 0
                 };
-
-                _context.Add(sal);
-                _context.SaveChangesAsync();
+                _context.Salaries.Add(sal);
+                var salary = _context.SaveChanges();
+                sal.IncomeTax = this.calculateTaxIncome(sal);
+                sal.MarrigeAllotments = this.calculateMarrigeAllotments(emp.MarrigeStatus);
+                sal.KidsAllotments = this.calculateKidsAllotments(emp.KidsNumber);
+                sal.TotalAmount = (int)Math.Round((decimal)(sal.InitialSalary + sal.UniAllotments
+                    + sal.DegreeAllotments + sal.PositionAllotments
+                    + sal.MarrigeAllotments + sal.KidsAllotments
+                    + sal.TransportationAllotments + sal.ScientificTitles.Income
+                    - sal.IncomeTax
+                    - sal.RetirementSubtraction - sal.OtherSubtractions - sal.VacationDiff));
+                _context.Salaries.Update(sal);
+                salary = _context.SaveChanges();
                 return RedirectToAction("Index", "Salary");
             }
             return View(employees);
         }
 
+        private int? calculateKidsAllotments(short kidsNumber)
+        {
+            return kidsNumber > 0 ? kidsNumber * 10000 : 0;
+        }
+
+        private int calculateTaxIncome(Salaries salary)
+        {
+            // todo : kids income
+            var oneMillion = 1000000;
+            // Salary of the year
+            var taxIncome = (int)salary.InitialSalary * 12;
+            // taking Retirement rate 
+            var retirement = taxIncome * 0.1;
+            taxIncome = (int)(taxIncome - retirement);
+            // Income of Marriage status
+            taxIncome = (int)(taxIncome - this.calculateMarrigeAllotments(salary.Employee.MarrigeStatus));
+
+            var kids = salary.Employee.KidsNumber;
+            if (salary.Employee.KidsNumber > 0)
+                taxIncome -= (kids * 200000);
+
+            if (this.calculateAge(salary.Employee.Birthdate) > 63)
+                taxIncome -= 300000;
+
+            // taxIncome = (int)(Math.Round((decimal)(taxIncome + this.calculateMarrigeAllotments(salary))));
+            if (taxIncome > oneMillion)
+            {
+                taxIncome = (int)(taxIncome - oneMillion);
+            }
+            // Calculate TaxIncome
+            if (taxIncome <= 250000)
+                taxIncome = (int)(taxIncome - (Math.Round(taxIncome * 0.03)));
+            else if (taxIncome > 250000 || taxIncome <= 500000)
+                taxIncome = (int)(taxIncome - (Math.Round(taxIncome * 0.05)));
+            else if (taxIncome > 500000 || taxIncome <= oneMillion)
+                taxIncome = (int)(taxIncome - (Math.Round(taxIncome * 0.1)));
+            else if (taxIncome > oneMillion)
+                taxIncome = (int)(taxIncome - (Math.Round(taxIncome * 0.15)));
+            taxIncome += 70000;
+            taxIncome = (int)Math.Round((decimal)(taxIncome / 12));
+
+
+            // final equation
+            return taxIncome;
+        }
+        private int? calculateMarrigeAllotments(short marrigeStatus)
+        {
+            // if employee is single 2500000 || wife employee and husband is retired
+            // || husband employee and his wife is employee || wife employee and her husband is employee
+            if (marrigeStatus == 0 || marrigeStatus == 1 || marrigeStatus == 2 || marrigeStatus == 3)
+                return 2500000;
+            // husband employee and his wife housewife 4500000 || wife employee and her husband works freelance 
+            else if (marrigeStatus == 4 || marrigeStatus == 5)
+                return 4500000;
+            // divorsed female employee 3200000 || widow female 
+            else if (marrigeStatus == 8 || marrigeStatus == 7)
+                return 3200000;
+
+            // error
+            return 0;
+        }
+        private int calculateAge(DateTime birthdate)
+        {
+            return DateTime.Now.AddYears(-birthdate.Year).Year;
+
+        }
         // GET: Employee/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -149,11 +228,12 @@ namespace ZulfieP.Controllers
                         IsRatired = employees.IsRatired,
                         KidsNumber = employees.KidsNumber,
                         GradeId = employees.GradeId,
+                        StageId = employees.StageId,
                         MarrigeStatus = employees.MarrigeStatus,
                     };
 
-                    _context.Update(employees);
-                    await _context.SaveChangesAsync();
+                    _context.Employees.Update(emp);
+                    var emplo = _context.SaveChanges();
 
                     var salary = _context.Salaries.Find(emp.Salaries.Where(s => s.EmployeeId == emp.Id));
                     var sal = new Salaries()
@@ -168,14 +248,26 @@ namespace ZulfieP.Controllers
                         KidsAllotments = employees.KidsAllotments,
                         TransportationAllotments = employees.TransportationAllotments,
                         RetirementSubtraction = employees.RetirementSubtraction,
-                        IncomeTax = 0,
+                        IncomeTax = salary.IncomeTax,
                         OtherSubtractions = employees.OtherSubtractions,
                         Description = employees.Description,
-                        ScientificTitleId = employees.ScientificTitleId,
-                        VacationDiff = employees.VacationDiff,
+                        ScientificTitleId = salary.ScientificTitleId,
+                        ScientificTitles = _context.ScientificTitles.Find(salary.ScientificTitleId),
+                        VacationDiff = (int)employees.VacationDiff,
                         TotalAmount = 0
                     };
-
+                    sal.IncomeTax = this.calculateTaxIncome(sal);
+                    sal.MarrigeAllotments = this.calculateMarrigeAllotments(emp.MarrigeStatus);
+                    sal.KidsAllotments = this.calculateKidsAllotments(emp.KidsNumber);
+                    sal.TotalAmount = (int)Math.Round((decimal)(sal.InitialSalary + sal.UniAllotments
+                        + sal.DegreeAllotments + sal.PositionAllotments
+                        + sal.MarrigeAllotments + sal.KidsAllotments
+                        + sal.TransportationAllotments + sal.ScientificTitles.Income
+                        - sal.IncomeTax
+                        - sal.RetirementSubtraction - sal.OtherSubtractions - sal.VacationDiff));
+                    _context.Salaries.Update(sal);
+                    var salar = _context.SaveChanges();
+                    return RedirectToAction("Index", "Salary");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
