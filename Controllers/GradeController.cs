@@ -21,7 +21,7 @@ namespace ZulfieP.Controllers
         // GET: Grade
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Grades.ToListAsync());
+            return View(await _context.Grades.Where(s => s.IsDeleted != true).ToListAsync());
         }
 
         // GET: Grade/Details/5

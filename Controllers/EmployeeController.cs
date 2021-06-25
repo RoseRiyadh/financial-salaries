@@ -23,7 +23,7 @@ namespace ZulfieP.Controllers
         // GET: Employee
         public async Task<IActionResult> Index()
         {
-            var salariesContext = _context.Employees.Include(e => e.Grade).Include(e => e.Stage);
+            var salariesContext = _context.Employees.Include(e => e.Grade).Include(e => e.Stage).Where(s => s.IsDeleted != true);
             return View(await salariesContext.ToListAsync());
         }
 
@@ -112,6 +112,7 @@ namespace ZulfieP.Controllers
             }
 
             var employees = await _context.Employees.FindAsync(id);
+
             if (employees == null)
             {
                 return NotFound();
@@ -126,7 +127,7 @@ namespace ZulfieP.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Employees employees)
+        public async Task<IActionResult> Edit(int id, EmployeeCreate employees)
         {
             if (id != employees.Id)
             {
@@ -137,8 +138,44 @@ namespace ZulfieP.Controllers
             {
                 try
                 {
+                    var emp = new Employees()
+                    {
+                        Id = employees.Id,
+                        FullName = employees.FullName,
+                        Birthdate = employees.Birthdate,
+                        IdentityNumber = employees.IdentityNumber,
+                        DepartmentId = employees.DepartmentId,
+                        Section = employees.Section,
+                        IsRatired = employees.IsRatired,
+                        KidsNumber = employees.KidsNumber,
+                        GradeId = employees.GradeId,
+                        MarrigeStatus = employees.MarrigeStatus,
+                    };
+
                     _context.Update(employees);
                     await _context.SaveChangesAsync();
+
+                    var salary = _context.Salaries.Find(emp.Salaries.Where(s => s.EmployeeId == emp.Id));
+                    var sal = new Salaries()
+                    {
+                        Id = salary.Id,
+                        EmployeeId = employees.Id,
+                        InitialSalary = employees.InitialSalary,
+                        UniAllotments = employees.UniAllotments,
+                        DegreeAllotments = employees.DegreeAllotments,
+                        PositionAllotments = employees.PositionAllotments,
+                        MarrigeAllotments = employees.MarrigeAllotments,
+                        KidsAllotments = employees.KidsAllotments,
+                        TransportationAllotments = employees.TransportationAllotments,
+                        RetirementSubtraction = employees.RetirementSubtraction,
+                        IncomeTax = 0,
+                        OtherSubtractions = employees.OtherSubtractions,
+                        Description = employees.Description,
+                        ScientificTitleId = employees.ScientificTitleId,
+                        VacationDiff = employees.VacationDiff,
+                        TotalAmount = 0
+                    };
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,7 +188,7 @@ namespace ZulfieP.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Salary"); ;
             }
             ViewData["GradeId"] = new SelectList(_context.Grades, "Id", "GradeName", employees.GradeId);
             ViewData["StageId"] = new SelectList(_context.Stages, "Id", "StageName", employees.StageId);
@@ -184,9 +221,12 @@ namespace ZulfieP.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var employees = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employees);
+            var salaries = await _context.Salaries.FindAsync(id);
+            // _context.Employees.Remove(employees);
+            employees.IsDeleted = true;
+            salaries.IsDeleted = true;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Salary");
         }
 
         private bool EmployeesExists(int id)

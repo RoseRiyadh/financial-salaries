@@ -21,7 +21,7 @@ namespace ZulfieP.Controllers
         // GET: Stage
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Stages.ToListAsync());
+            return View(await _context.Stages.Where(s => s.IsDeleted != true).ToListAsync());
         }
 
         // GET: Stage/Details/5

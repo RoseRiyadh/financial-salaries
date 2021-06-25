@@ -8,6 +8,7 @@ namespace ZulfieP.Models.Binding
 {
     public partial class EmployeeCreate
     {
+        public int Id { get; set; }
         [Display(Name = "Full employee name :")]
         public string FullName { get; set; }
         [Display(Name = "Birth date: :")]
@@ -19,7 +20,7 @@ namespace ZulfieP.Models.Binding
         [Display(Name = "Section :")]
         public short Section { get; set; }
         [Display(Name = "Retirement status :")]
-        public bool IsRatired { get; set; }
+        public short IsRatired { get; set; }
         [Display(Name = "Kids' Number :")]
         public short KidsNumber { get; set; }
         [Display(Name = "Grade :")]

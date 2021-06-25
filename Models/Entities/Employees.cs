@@ -27,7 +27,7 @@ namespace ZulfieP.Models.Entities
         [Display(Name = "Section :")]
         public short Section { get; set; }
         [Display(Name = "Retirement status :")]
-        public bool IsRatired { get; set; }
+        public short IsRatired { get; set; }
         [Display(Name = "Kids' Number :")]
         public short KidsNumber { get; set; }
         [Display(Name = "Grade :")]

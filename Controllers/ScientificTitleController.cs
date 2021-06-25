@@ -21,7 +21,7 @@ namespace ZulfieP.Controllers
         // GET: ScientificTitle
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ScientificTitles.ToListAsync());
+            return View(await _context.ScientificTitles.Where(s => s.IsDeleted != true).ToListAsync());
         }
 
         // GET: ScientificTitle/Details/5

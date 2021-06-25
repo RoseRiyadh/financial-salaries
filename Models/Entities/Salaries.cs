@@ -25,7 +25,7 @@ namespace ZulfieP.Models.Entities
         public int? OtherSubtractions { get; set; }
         public string Description { get; set; }
         public int ScientificTitleId { get; set; }
-        public int? VacationDiff { get; set; }
+        public int VacationDiff { get; set; }
 
         public int TotalAmount { get; set; }
         public bool IsDeleted { get; set; }

@@ -165,7 +165,7 @@ namespace ZulfieP.Models.Entities
 
                 entity.Property(e => e.UniAllotments).HasColumnName("uni_allotments");
 
-                entity.Property(e => e.VacationDiff).HasColumnName("total_amount");
+                entity.Property(e => e.TotalAmount).HasColumnName("total_amount");
 
                 entity.Property(e => e.VacationDiff).HasColumnName("vacation_diff");
 
