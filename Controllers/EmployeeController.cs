@@ -126,14 +126,15 @@ namespace ZulfieP.Controllers
             // taking Retirement rate 
             var retirement = taxIncome * 0.1;
             taxIncome = (int)(taxIncome - retirement);
+            var EMP = _context.Employees.Find(salary.EmployeeId);
             // Income of Marriage status
-            taxIncome = (int)(taxIncome - this.calculateMarrigeAllotments(salary.Employee.MarrigeStatus));
+            taxIncome = (int)(taxIncome - this.calculateMarrigeAllotments(EMP.MarrigeStatus));
 
-            var kids = salary.Employee.KidsNumber;
-            if (salary.Employee.KidsNumber > 0)
+            var kids = EMP.KidsNumber;
+            if (kids > 0)
                 taxIncome -= (kids * 200000);
 
-            if (this.calculateAge(salary.Employee.Birthdate) > 63)
+            if (this.calculateAge(EMP.Birthdate) > 63)
                 taxIncome -= 300000;
 
             // taxIncome = (int)(Math.Round((decimal)(taxIncome + this.calculateMarrigeAllotments(salary))));
@@ -179,10 +180,11 @@ namespace ZulfieP.Controllers
 
         }
         // GET: Employee/Edit/5
-        public IActionResult EditE(int id)
+        public IActionResult Edit(int id)
         {
-            
-            var emp = _context.Employees.Find(id);
+
+            var SAL = _context.Salaries.Find(id);
+            var emp = _context.Employees.Where(s => s.Id == SAL.EmployeeId).First();
             if (emp == null)
             {
                 return NotFound();
@@ -199,17 +201,17 @@ namespace ZulfieP.Controllers
                 GradeId = emp.GradeId,
                 StageId = emp.StageId,
                 MarrigeStatus = emp.MarrigeStatus,
-                InitialSalary = emp.Salaries.First().InitialSalary,
-                UniAllotments = emp.Salaries.First().UniAllotments,
-                DegreeAllotments = emp.Salaries.First().DegreeAllotments,
-                PositionAllotments = emp.Salaries.First().PositionAllotments,
-                MarrigeAllotments = emp.Salaries.First().MarrigeAllotments,
-                KidsAllotments = emp.Salaries.First().KidsAllotments,
-                TransportationAllotments = emp.Salaries.First().TransportationAllotments,
-                RetirementSubtraction = emp.Salaries.First().RetirementSubtraction,
-                OtherSubtractions = emp.Salaries.First().OtherSubtractions,
-                Description = emp.Salaries.First().Description,
-                ScientificTitleId = (int)emp.Salaries.First().ScientificTitleId,
+                InitialSalary = SAL.InitialSalary,
+                UniAllotments = SAL.UniAllotments,
+                DegreeAllotments = SAL.DegreeAllotments,
+                PositionAllotments = SAL.PositionAllotments,
+                MarrigeAllotments = SAL.MarrigeAllotments,
+                KidsAllotments = SAL.KidsAllotments,
+                TransportationAllotments = SAL.TransportationAllotments,
+                RetirementSubtraction = SAL.RetirementSubtraction,
+                OtherSubtractions = SAL.OtherSubtractions,
+                Description = SAL.Description,
+                ScientificTitleId = (int)SAL.ScientificTitleId,
                 VacationDiff = emp.Salaries.FirstOrDefault().VacationDiff
             };
             
@@ -226,18 +228,16 @@ namespace ZulfieP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EmployeeCreate employees)
         {
-            if (id != employees.Id)
-            {
-                return NotFound();
-            }
-
+            
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var emp = new Employees()
+                    var SAL = _context.Salaries.Find(id);
+                    var emp = _context.Employees.Where(s => s.Id == SAL.EmployeeId).First();
+                    var emplo = new Employees()
                     {
-                        Id = employees.Id,
+                        Id = emp.Id,
                         FullName = employees.FullName,
                         Birthdate = employees.Birthdate,
                         IdentityNumber = employees.IdentityNumber,
@@ -250,13 +250,11 @@ namespace ZulfieP.Controllers
                         MarrigeStatus = employees.MarrigeStatus,
                     };
 
-                    _context.Employees.Update(emp);
-                    var emplo = _context.SaveChanges();
 
-                    var salary = _context.Salaries.Where(s => s.EmployeeId == id).First();
-                    var sal = new Salaries()
+                   
+                    var salar = new Salaries()
                     {
-                        Id = salary.Id,
+                        Id = SAL.Id,
                         EmployeeId = employees.Id,
                         InitialSalary = employees.InitialSalary,
                         UniAllotments = employees.UniAllotments,
@@ -266,20 +264,17 @@ namespace ZulfieP.Controllers
                         KidsAllotments = employees.KidsAllotments,
                         TransportationAllotments = employees.TransportationAllotments,
                         RetirementSubtraction = employees.RetirementSubtraction,
-                        IncomeTax = salary.IncomeTax,
+                        IncomeTax = SAL.IncomeTax,
                         OtherSubtractions = employees.OtherSubtractions,
                         Description = employees.Description,
-                        ScientificTitleId = salary.ScientificTitleId,
-                        ScientificTitles = _context.ScientificTitles.Find(salary.ScientificTitleId),
+                        ScientificTitleId = SAL.ScientificTitleId,
+                        ScientificTitles = _context.ScientificTitles.Find(SAL.ScientificTitleId),
                         VacationDiff = (int)employees.VacationDiff,
                         TotalAmount = 0
                     };
-                    sal.IncomeTax = this.calculateTaxIncome(sal);
-                    sal.MarrigeAllotments = this.calculateMarrigeAllotments(emp.MarrigeStatus);
-                    sal.KidsAllotments = this.calculateKidsAllotments(emp.KidsNumber);
-                    sal.TotalAmount = this.calculateFinalAmount(sal);
-                    _context.Salaries.Update(sal);
-                    var salar = _context.SaveChanges();
+                    salar.IncomeTax = this.calculateTaxIncome(salar);
+                    salar.TotalAmount = this.calculateFinalAmount(salar);
+                    _context.SaveChanges();
                     return RedirectToAction("Index", "Salary");
                 }
                 catch (DbUpdateConcurrencyException)
