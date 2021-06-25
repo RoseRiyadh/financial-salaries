@@ -36,10 +36,10 @@ namespace ZulfieP
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.Configure<AuthOptions>(Configuration);
+            
             services.AddControllersWithViews();
             services.AddSingleton<Cryptography>();
-            services.AddScoped<Auth>();
+            
             services.AddRazorPages();
         }
 

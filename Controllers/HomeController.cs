@@ -14,12 +14,12 @@ namespace ZulfieP.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly Auth _auth;
+        
 
-        public HomeController(ILogger<HomeController> logger, Auth auth)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _auth = auth;
+        
         }
 
         public IActionResult Index()
@@ -28,27 +28,7 @@ namespace ZulfieP.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginView model, string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var loggedIn = _auth.SignIn(model.UserName, model.Password);
-                if (loggedIn)
-                {
-                    return RedirectToAction("Index", "Salary");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
-                }
-            }
-
-            return View(model);
-        }
+        
 
 
 

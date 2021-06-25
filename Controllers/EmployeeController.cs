@@ -52,6 +52,7 @@ namespace ZulfieP.Controllers
         {
             ViewData["GradeId"] = new SelectList(_context.Grades, "Id", "GradeName");
             ViewData["StageId"] = new SelectList(_context.Stages, "Id", "StageName");
+            ViewData["ScientificTitleId"] = new SelectList(_context.ScientificTitles, "Id", "ScientificTitle");
             return View();
         }
 
@@ -189,16 +190,41 @@ namespace ZulfieP.Controllers
             {
                 return NotFound();
             }
-
-            var employees = await _context.Employees.FindAsync(id);
-
-            if (employees == null)
+            var emp = _context.Employees.Find(id);
+            var sal = _context.Salaries.Where(s => s.EmployeeId == id).First();
+            var employee = new EmployeeCreate()
+            {
+                FullName = emp.FullName,
+                Birthdate = emp.Birthdate,
+                IdentityNumber = emp.IdentityNumber,
+                DepartmentId = emp.DepartmentId,
+                Section = emp.Section,
+                IsRatired = emp.IsRatired,
+                KidsNumber = emp.KidsNumber,
+                GradeId = emp.GradeId,
+                StageId = emp.StageId,
+                MarrigeStatus = emp.MarrigeStatus,
+                InitialSalary = sal.InitialSalary,
+                UniAllotments=sal.UniAllotments,
+                DegreeAllotments = sal.DegreeAllotments,
+                PositionAllotments = sal.PositionAllotments,
+                MarrigeAllotments = sal.MarrigeAllotments,
+                KidsAllotments = sal.KidsAllotments,
+                TransportationAllotments = sal.TransportationAllotments,
+                RetirementSubtraction = sal.RetirementSubtraction,
+                OtherSubtractions =  sal.OtherSubtractions,
+                Description = sal.Description,
+                ScientificTitleId = (int)sal.ScientificTitleId,
+                VacationDiff = sal.VacationDiff
+            };
+            if (emp == null)
             {
                 return NotFound();
             }
-            ViewData["GradeId"] = new SelectList(_context.Grades, "Id", "GradeName", employees.GradeId);
-            ViewData["StageId"] = new SelectList(_context.Stages, "Id", "StageName", employees.StageId);
-            return View(employees);
+            ViewData["GradeId"] = new SelectList(_context.Grades, "Id", "GradeName", employee.GradeId);
+            ViewData["StageId"] = new SelectList(_context.Stages, "Id", "StageName", employee.StageId);
+            ViewData["ScientificTitleId"] = new SelectList(_context.ScientificTitles, "Id", "ScientificTitle", sal.ScientificTitleId);
+            return View(employee);
         }
 
         // POST: Employee/Edit/5
@@ -235,7 +261,7 @@ namespace ZulfieP.Controllers
                     _context.Employees.Update(emp);
                     var emplo = _context.SaveChanges();
 
-                    var salary = _context.Salaries.Find(emp.Salaries.Where(s => s.EmployeeId == emp.Id));
+                    var salary = _context.Salaries.Find(id);
                     var sal = new Salaries()
                     {
                         Id = salary.Id,

@@ -112,7 +112,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ScientificTitleId" class="control-label"></label>
-                <input asp-for="ScientificTitleId" class="form-control" />
+                <select asp-for="ScientificTitleId" class="form-control" asp-items="ViewBag.ScientificTitleId"></select>
                 <span asp-validation-for="ScientificTitleId" class="text-danger"></span>
             </div>
             <div class="form-group">

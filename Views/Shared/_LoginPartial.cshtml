@@ -1,26 +1,4 @@
-﻿@inject ZulfieP.Services.Auth AuthService
-
-@{ 
-    var SignInManager = AuthService.ScopeAuthInfo;
-}
-
+﻿
 <ul class="navbar-nav">
-@if (SignInManager.IsAuthenticated)
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-controller="User" asp-action="Index" title="Manage">Hello @SignInManager.UserName!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Salary", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-   
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="Login" asp-controller="Home">Login</a>
-    </li>
-}
+
 </ul>
