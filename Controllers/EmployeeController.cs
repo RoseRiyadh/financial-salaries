@@ -104,12 +104,7 @@ namespace ZulfieP.Controllers
                 sal.IncomeTax = this.calculateTaxIncome(sal);
                 sal.MarrigeAllotments = this.calculateMarrigeAllotments(emp.MarrigeStatus);
                 sal.KidsAllotments = this.calculateKidsAllotments(emp.KidsNumber);
-                sal.TotalAmount = (int)Math.Round((decimal)(sal.InitialSalary + sal.UniAllotments
-                    + sal.DegreeAllotments + sal.PositionAllotments
-                    + sal.MarrigeAllotments + sal.KidsAllotments
-                    + sal.TransportationAllotments + sal.ScientificTitles.Income
-                    - sal.IncomeTax
-                    - sal.RetirementSubtraction - sal.OtherSubtractions - sal.VacationDiff));
+                sal.TotalAmount = this.calculateFinalAmount(sal);
                 _context.Salaries.Update(sal);
                 salary = _context.SaveChanges();
                 return RedirectToAction("Index", "Salary");
@@ -184,14 +179,14 @@ namespace ZulfieP.Controllers
 
         }
         // GET: Employee/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult EditE(int id)
         {
-            if (id == null)
+            
+            var emp = _context.Employees.Find(id);
+            if (emp == null)
             {
                 return NotFound();
             }
-            var emp = _context.Employees.Find(id);
-            var sal = _context.Salaries.Where(s => s.EmployeeId == id).First();
             var employee = new EmployeeCreate()
             {
                 FullName = emp.FullName,
@@ -204,26 +199,23 @@ namespace ZulfieP.Controllers
                 GradeId = emp.GradeId,
                 StageId = emp.StageId,
                 MarrigeStatus = emp.MarrigeStatus,
-                InitialSalary = sal.InitialSalary,
-                UniAllotments=sal.UniAllotments,
-                DegreeAllotments = sal.DegreeAllotments,
-                PositionAllotments = sal.PositionAllotments,
-                MarrigeAllotments = sal.MarrigeAllotments,
-                KidsAllotments = sal.KidsAllotments,
-                TransportationAllotments = sal.TransportationAllotments,
-                RetirementSubtraction = sal.RetirementSubtraction,
-                OtherSubtractions =  sal.OtherSubtractions,
-                Description = sal.Description,
-                ScientificTitleId = (int)sal.ScientificTitleId,
-                VacationDiff = sal.VacationDiff
+                InitialSalary = emp.Salaries.First().InitialSalary,
+                UniAllotments = emp.Salaries.First().UniAllotments,
+                DegreeAllotments = emp.Salaries.First().DegreeAllotments,
+                PositionAllotments = emp.Salaries.First().PositionAllotments,
+                MarrigeAllotments = emp.Salaries.First().MarrigeAllotments,
+                KidsAllotments = emp.Salaries.First().KidsAllotments,
+                TransportationAllotments = emp.Salaries.First().TransportationAllotments,
+                RetirementSubtraction = emp.Salaries.First().RetirementSubtraction,
+                OtherSubtractions = emp.Salaries.First().OtherSubtractions,
+                Description = emp.Salaries.First().Description,
+                ScientificTitleId = (int)emp.Salaries.First().ScientificTitleId,
+                VacationDiff = emp.Salaries.FirstOrDefault().VacationDiff
             };
-            if (emp == null)
-            {
-                return NotFound();
-            }
+            
             ViewData["GradeId"] = new SelectList(_context.Grades, "Id", "GradeName", employee.GradeId);
             ViewData["StageId"] = new SelectList(_context.Stages, "Id", "StageName", employee.StageId);
-            ViewData["ScientificTitleId"] = new SelectList(_context.ScientificTitles, "Id", "ScientificTitle", sal.ScientificTitleId);
+            ViewData["ScientificTitleId"] = new SelectList(_context.ScientificTitles, "Id", "ScientificTitle", emp.Salaries.First().ScientificTitleId);
             return View(employee);
         }
 
@@ -261,7 +253,7 @@ namespace ZulfieP.Controllers
                     _context.Employees.Update(emp);
                     var emplo = _context.SaveChanges();
 
-                    var salary = _context.Salaries.Find(id);
+                    var salary = _context.Salaries.Where(s => s.EmployeeId == id).First();
                     var sal = new Salaries()
                     {
                         Id = salary.Id,
@@ -285,12 +277,7 @@ namespace ZulfieP.Controllers
                     sal.IncomeTax = this.calculateTaxIncome(sal);
                     sal.MarrigeAllotments = this.calculateMarrigeAllotments(emp.MarrigeStatus);
                     sal.KidsAllotments = this.calculateKidsAllotments(emp.KidsNumber);
-                    sal.TotalAmount = (int)Math.Round((decimal)(sal.InitialSalary + sal.UniAllotments
-                        + sal.DegreeAllotments + sal.PositionAllotments
-                        + sal.MarrigeAllotments + sal.KidsAllotments
-                        + sal.TransportationAllotments + sal.ScientificTitles.Income
-                        - sal.IncomeTax
-                        - sal.RetirementSubtraction - sal.OtherSubtractions - sal.VacationDiff));
+                    sal.TotalAmount = this.calculateFinalAmount(sal);
                     _context.Salaries.Update(sal);
                     var salar = _context.SaveChanges();
                     return RedirectToAction("Index", "Salary");
@@ -311,6 +298,16 @@ namespace ZulfieP.Controllers
             ViewData["GradeId"] = new SelectList(_context.Grades, "Id", "GradeName", employees.GradeId);
             ViewData["StageId"] = new SelectList(_context.Stages, "Id", "StageName", employees.StageId);
             return View(employees);
+        }
+
+        private int? calculateFinalAmount(Salaries sal)
+        {
+            return (int)Math.Round((decimal)(sal.InitialSalary + sal.UniAllotments
+                        + sal.DegreeAllotments + sal.PositionAllotments
+                        + sal.MarrigeAllotments + sal.KidsAllotments
+                        + sal.TransportationAllotments + sal.ScientificTitles.Income
+                        - sal.IncomeTax
+                        - sal.RetirementSubtraction - sal.OtherSubtractions - sal.VacationDiff));
         }
 
         // GET: Employee/Delete/5
