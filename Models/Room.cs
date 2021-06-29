@@ -6,19 +6,20 @@ using System.ComponentModel.DataAnnotations;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace ZulfieP.Models.Entities
+namespace ZulfieP.Models
 {
-    public partial class Passwords
+    public partial class Room
     {
-        public Passwords()
+        public Room()
         {
-            Users = new HashSet<Users>();
+            Employee = new HashSet<Employee>();
         }
         [Key]
+        [Display(Name = "ت")]
         public int Id { get; set; }
-        public string HashedPassword { get; set; }
-        public string PasswordSalt { get; set; }
+        [Display(Name = "اسم القسم")]
+        public string Name { get; set; }
 
-        public virtual ICollection<Users> Users { get; set; }
+        public virtual ICollection<Employee> Employee { get; set; }
     }
 }

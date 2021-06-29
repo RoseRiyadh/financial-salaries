@@ -6,18 +6,20 @@ using System.ComponentModel.DataAnnotations;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace ZulfieP.Models.Entities
+namespace ZulfieP.Models
 {
-    public partial class Users
+    public partial class User
     {
         [Key]
+        [Display(Name = "ت")]
         public int Id { get; set; }
+        [Display(Name = "الاسم الكامل")]
         public string FullName { get; set; }
+        [Display(Name = "اسم المستخدم")]
         public string Username { get; set; }
-        public int PasswordId { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
-
-        public virtual Passwords Password { get; set; }
+        [Display(Name = "كلمة المرور")]
+        public string Password { get; set; }
+        [Display(Name = "نوع الحساب ")]
+        public short Permission { get; set; }
     }
 }

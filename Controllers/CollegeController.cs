@@ -5,26 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ZulfieP.Models.Entities;
+using ZulfieP.Models;
 
 namespace ZulfieP.Controllers
 {
-    public class StageController : Controller
+    public class CollegeController : Controller
     {
-        private readonly SalariesContext _context;
+        private readonly fsContext _context;
 
-        public StageController(SalariesContext context)
+        public CollegeController(fsContext context)
         {
-            _context = context; 
+            _context = context;
         }
 
-        // GET: Stage
+        // GET: College
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Stages.Where(s => s.IsDeleted != true).ToListAsync());
+            return View(await _context.College.ToListAsync());
         }
 
-        // GET: Stage/Details/5
+        // GET: College/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace ZulfieP.Controllers
                 return NotFound();
             }
 
-            var stages = await _context.Stages
+            var college = await _context.College
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (stages == null || stages.IsDeleted == true)
+            if (college == null)
             {
                 return NotFound();
             }
 
-            return View(stages);
+            return View(college);
         }
 
-        // GET: Stage/Create
+        // GET: College/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Stage/Create
+        // POST: College/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StageName,IsDeleted")] Stages stages)
+        public async Task<IActionResult> Create(College college)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(stages);
+                _context.Add(college);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(stages);
+            return View(college);
         }
 
-        // GET: Stage/Edit/5
+        // GET: College/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace ZulfieP.Controllers
                 return NotFound();
             }
 
-            var stages = await _context.Stages.FindAsync(id);
-            if (stages == null || stages.IsDeleted == true)
+            var college = await _context.College.FindAsync(id);
+            if (college == null)
             {
                 return NotFound();
             }
-            return View(stages);
+            return View(college);
         }
 
-        // POST: Stage/Edit/5
+        // POST: College/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StageName,IsDeleted")] Stages stages)
+        public async Task<IActionResult> Edit(int id,College college)
         {
-            if (id != stages.Id)
+            if (id != college.Id)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace ZulfieP.Controllers
             {
                 try
                 {
-                    _context.Update(stages);
+                    _context.Update(college);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StagesExists(stages.Id))
+                    if (!CollegeExists(college.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace ZulfieP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(stages);
+            return View(college);
         }
 
-        // GET: Stage/Delete/5
+        // GET: College/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,32 +123,30 @@ namespace ZulfieP.Controllers
                 return NotFound();
             }
 
-            var stages = await _context.Stages
+            var college = await _context.College
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (stages == null || stages.IsDeleted == true)
+            if (college == null)
             {
                 return NotFound();
             }
 
-            return View(stages);
+            return View(college);
         }
 
-        // POST: Stage/Delete/5
+        // POST: College/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var stages = await _context.Stages.FindAsync(id);
-            // _context.Stages.Remove(stages);
-            stages.IsDeleted = true;
-            _context.Stages.Update(stages);
+            var college = await _context.College.FindAsync(id);
+            _context.College.Remove(college);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StagesExists(int id)
+        private bool CollegeExists(int id)
         {
-            return _context.Stages.Any(e => e.Id == id);
+            return _context.College.Any(e => e.Id == id);
         }
     }
 }

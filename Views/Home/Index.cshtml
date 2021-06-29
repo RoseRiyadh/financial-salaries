@@ -1,11 +1,21 @@
-﻿@model ZulfieP.Models.Binding.LoginView
-@{
-    Layout = "_Layout";
-    ViewData["Title"] = "Hello";
+﻿@{
+    ViewData["Title"] = "Home";
 }
 
-<h1>hello</h1>
-
-
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<div class="text-center">
+    <div class="list-group">
+        <a asp-action="Index" asp-controller="Home" class="list-group-item bg-dark list-group-item-action text-light">
+            اقسام الموقع الرئيسية
+        </a>
+        
+        <a asp-action="Index" asp-controller="Employee" class="list-group-item list-group-item-action">الموظفون</a>
+        <a asp-action="Index" asp-controller="Salary" class="list-group-item list-group-item-action">الرواتب</a>
+        <a asp-action="Index" asp-controller="Position" class="list-group-item list-group-item-action">الالقاب العلمية</a>
+        <a asp-action="Index" asp-controller="MarrigeStatus" class="list-group-item list-group-item-action">الحالات الزوجية</a>
+        <a asp-action="Index" asp-controller="Degree" class="list-group-item list-group-item-action">المراحل الوظيفية</a>
+        <a asp-action="Index" asp-controller="Grade" class="list-group-item list-group-item-action">الدرجات الوظيفية</a>
+        <a asp-action="Index" asp-controller="College" class="list-group-item list-group-item-action">الجامعات</a>
+        <a asp-action="Index" asp-controller="Room" class="list-group-item list-group-item-action">غرف القسم</a>
+        <a asp-action="Index" asp-controller="JobTitle" class="list-group-item list-group-item-action">انواع الوظائف</a>
+    </div>
+</div>
